@@ -1,5 +1,10 @@
 pipeline {
     agent any
+    environment {
+        imagename = "rajeshc/study"
+        registryCredential = 'ab78ce32-dfeb-4255-ad15-2b7b92e8851e'
+        dockerImage = ''
+      }
 
     triggers {
         pollSCM '* * * * *'
@@ -12,8 +17,15 @@ pipeline {
         }
         stage('Test') {
             steps {
-                sh './mvnw clean test'
+                sh './mvnw  test'
             }
         }
+        stage('Dockerize') {
+                    steps {
+                        script {
+                                  dockerImage = docker.build cicdspboot
+                                }
+                    }
+                }
     }
 }
